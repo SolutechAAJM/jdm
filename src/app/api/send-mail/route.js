@@ -20,7 +20,7 @@ export async function POST(request) {
           email: process.env.MAILFROM, 
           name: 'Pagina web JDM Consultoría'
         },
-        to: [{ email: process.env.MAILSENDER_TO, name: 'MailSender' }],
+        to: [{ email: process.env.MAILSENDER_TO, name: 'MailSender' }, { email: process.env.MAILSENDER_TO1, name: 'MailSender' }, { email: process.env.MAILSENDER_TO2, name: 'MailSender' }],
         subject: `Nuevo mensaje de contacto de ${name}`,
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9;">
