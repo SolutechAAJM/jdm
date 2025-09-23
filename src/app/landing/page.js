@@ -9,23 +9,29 @@ import { Team } from "@/app/landing/components/team";
 import { Projects } from "@/app/landing/components/projects";
 import { Contact } from "@/app/landing/components/contact";
 import { Footer } from "@/app/landing/components/footer";
+import { BackgroundAnimation } from "@/components/backgroundAnimation";
+import FloatingWhatsApp from "@/components/floatingWhatsapp";
 
 const Landing = () => {
   return (
-    <motion.div
-      className="App"
-      initial={{ opacity: 0, y: 20 }}   
-      animate={{ opacity: 1, y: 0 }}   
-      transition={{ duration: 0.8, ease: "easeOut" }} 
-    >
-      <Header />
-      <Hero />
-      <Services />
-      <Team />
-      <Projects />
-      <Contact />
-      <Footer />
-    </motion.div>
+    <>
+      <BackgroundAnimation />
+      <FloatingWhatsApp />
+      <motion.div
+        className="App"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <Header />
+        <Hero />
+        <Services />
+        <Team />
+        <Projects />
+        <Contact />
+        <Footer />
+      </motion.div>
+    </>
   );
 };
 

@@ -6,6 +6,8 @@ export const Contact = () => {
     email: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -14,11 +16,34 @@ export const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Formulario enviado:', formData);
-    alert('¡Gracias por tu mensaje! Te contactaremos pronto.');
-    setFormData({ name: '', email: '', message: '' });
+    setIsSubmitting(true);
+    setSubmitStatus('');
+
+    try {
+      const response = await fetch('/api/send-mail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        throw new Error(result.message || 'Error al enviar el mensaje');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -31,8 +56,20 @@ export const Contact = () => {
               Estamos listos para convertir tus ideas en realidad. Contáctanos y te responderemos en menos de 24 horas.
             </p>
           </div>
-          
+
           <div className="bg-white rounded-2xl p-8 shadow-md">
+            {submitStatus === 'success' && (
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
+                ¡Gracias por tu mensaje! Te contactaremos en menos de 24 horas.
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-[#0B4059] font-medium mb-2">Nombre</label>
@@ -44,9 +81,10 @@ export const Contact = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4BC1F2]"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="email" className="block text-[#0B4059] font-medium mb-2">Email</label>
                 <input
@@ -57,9 +95,10 @@ export const Contact = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4BC1F2]"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
-              
+
               <div>
                 <label htmlFor="message" className="block text-[#0B4059] font-medium mb-2">Mensaje</label>
                 <textarea
@@ -70,14 +109,16 @@ export const Contact = () => {
                   rows="5"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4BC1F2]"
                   required
+                  disabled={isSubmitting}
                 ></textarea>
               </div>
-              
+
               <button
                 type="submit"
-                className="w-full bg-[#0B4059] text-white py-3 rounded-lg font-medium hover:bg-[#4BC1F2] transition"
+                disabled={isSubmitting}
+                className="w-full bg-[#0B4059] text-white py-3 rounded-lg font-medium hover:bg-[#4BC1F2] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Enviar mensaje
+                {isSubmitting ? 'Enviando...' : 'Enviar mensaje'}
               </button>
             </form>
           </div>

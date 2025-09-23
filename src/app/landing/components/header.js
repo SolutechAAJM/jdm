@@ -25,7 +25,7 @@ export const Header = () => {
                     </nav>
 
                     <button className="hidden md:block bg-[#0B4059] text-white px-6 py-2 rounded-full hover:bg-[#4BC1F2] transition">
-                        Iniciar proyecto
+                        <a href='#contact'>Iniciar proyecto</a>
                     </button>
 
                     <button className="md:hidden text-[#0B4059]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
@@ -41,7 +41,7 @@ export const Header = () => {
                             <a href="#projects" className="text-[#0B4059] hover:text-[#4BC1F2] transition">Proyectos</a>
                             <a href="#contact" className="text-[#0B4059] hover:text-[#4BC1F2] transition">Contacto</a>
                             <button className="bg-[#0B4059] text-white px-6 py-2 rounded-full hover:bg-[#4BC1F2] transition w-full mt-2">
-                                Iniciar proyecto
+                               <a href='#contact'>Iniciar proyecto</a>
                             </button>
                         </div>
                     </div>

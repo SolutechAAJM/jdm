@@ -2,14 +2,12 @@ import { Carousel } from '@/components/carousel';
 import { useRouter } from 'next/navigation';
 
 export const Team = () => {
-    const router = useRouter();
-
     const teamMembers = [
         {
             name: "Maicol Arroyave",
             role: "CEO & Fundador",
             linkedin: "https://www.linkedin.com/in/maicolaa/",
-            image: "https://media.licdn.com/dms/image/v2/D4E03AQFFIhAgW_zkyg/profile-displayphoto-shrink_200_200/B4EZdRuyqnHQAc-/0/1749422918755?e=1761177600&v=beta&t=cgc__KNWYnxZuNi0yazOfURFFR0217i5G3sCsY8aBwA"
+            image: "/files/photos/F001.jpeg"
         },
         {
             name: "Oscar David Ramos Calzada",
@@ -22,7 +20,7 @@ export const Team = () => {
             role: "Líder de Desarrollo",
             linkedin: "https://www.linkedin.com/in/johan-esteban-moreno-jim%C3%A9nez-71051b265",
             image: "https://media.licdn.com/dms/image/v2/D4E35AQFuQFCmB8aIkw/profile-framedphoto-shrink_200_200/profile-framedphoto-shrink_200_200/0/1685220765181?e=1759068000&v=beta&t=aRrA3ln-cJRlySww5_b9Lwicb999f3BYQv6R9bk7oL4"
-        }
+        },
     ];
 
     const redirectTo = (item) => {
