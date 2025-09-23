@@ -13,14 +13,14 @@ export async function POST(request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_MAILSENDER_TOKEN}`
+        'Authorization': `Bearer ${process.env.MAILSENDER_TOKEN}`
       },
       body: JSON.stringify({
          from: {
-          email: NEXT_PUBLIC_MAILFROM, 
+          email: process.env.MAILFROM, 
           name: 'Pagina web JDM Consultoría'
         },
-        to: [{ email: process.env.NEXT_PUBLIC_MAILSENDER_TO, name: 'MailSender' }],
+        to: [{ email: process.env.MAILSENDER_TO, name: 'MailSender' }],
         subject: `Nuevo mensaje de contacto de ${name}`,
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9;">
@@ -53,8 +53,6 @@ Enviado el: ${new Date().toLocaleString('es-ES')}
         `.trim()
       })
     });
-
-    console.log(response);
 
     if (!response.ok) {
       const errorData = await response.text();
