@@ -1,11 +1,27 @@
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 export async function POST(request) {
   try {
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 200,
+        headers: corsHeaders
+      });
+    }
+
     const { name, email, message } = await request.json();
 
     if (!name || !email || !message) {
       return new Response(JSON.stringify({ message: 'Todos los campos son requeridos' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
       });
     }
 
@@ -16,7 +32,7 @@ export async function POST(request) {
         'Authorization': `Bearer ${process.env.MAILSENDER_TOKEN}`
       },
       body: JSON.stringify({
-         from: {
+        from: {
           email: process.env.MAILFROM, 
           name: 'Pagina web JDM Consultoría'
         },
@@ -61,7 +77,10 @@ Enviado el: ${new Date().toLocaleString('es-ES')}
 
     return new Response(JSON.stringify({ message: 'Mensaje enviado exitosamente' }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        ...corsHeaders
+      }
     });
 
   } catch (error) {
@@ -72,7 +91,10 @@ Enviado el: ${new Date().toLocaleString('es-ES')}
       error: error.message
     }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        ...corsHeaders
+      }
     });
   }
 }
@@ -80,6 +102,16 @@ Enviado el: ${new Date().toLocaleString('es-ES')}
 export async function GET() {
   return new Response(JSON.stringify({ message: 'Método no permitido' }), {
     status: 405,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 
+      'Content-Type': 'application/json',
+      ...corsHeaders
+    }
+  });
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: corsHeaders
   });
 }
