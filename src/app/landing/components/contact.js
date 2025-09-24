@@ -1,15 +1,23 @@
-import { useState } from 'react';
+"use client";
+import { useState, useEffect } from 'react';
+import emailjs from "emailjs-com";
 
 export const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-    destination: process.env.MAILSENDER_TO,
-    origin: 'Pagina web JDM Consultoría'
+    from_name: "",
+    to_name: "",
+    message: "",
+    origin: 'Pagina web JDM Consultoría',
+    date: new Date().toLocaleString('es-ES')
   });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
+
+
+  useEffect(() => {
+    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -24,29 +32,33 @@ export const Contact = () => {
     setSubmitStatus('');
 
     try {
-      const response = await fetch('/api/send-mail', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      });
+      const result = await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: formData.from_name,
+          from_email: formData.to_name,
+          to_email: "maicolaroyave10@gmail.com",
+          message: formData.message,
+          origin: formData.origin,
+          date: formData.date
+        }
+      );
 
-      const result = await response.json();
+      console.log("result", result);
 
-      if (response.ok) {
+      if (result.status === 200) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', message: '' });
       } else {
-        throw new Error(result.message || 'Error al enviar el mensaje');
+        setSubmitStatus('error');
       }
     } catch (error) {
-      console.error('Error:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }
 
   return (
     <section id="contact" className="py-20 bg-[#E1EDF0]">

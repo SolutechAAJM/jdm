@@ -25,54 +25,34 @@ export async function POST(request) {
       });
     }
 
-    const response = await fetch('https://api.mailersend.com/v1/email', {
+
+    const emailJSPayload = {
+      service_id: process.env.EMAILJS_SERVICE_ID,
+      template_id: process.env.EMAILJS_TEMPLATE_ID,
+      user_id: process.env.EMAILJS_PUBLIC_KEY,
+      accessToken: process.env.EMAILJS_PRIVATE_KEY, 
+      template_params: {
+        from_name: name,
+        from_email: email,
+        to_email: destination,
+        subject: `Nuevo mensaje de contacto de ${name}`,
+        message: message,
+        origin: origin,
+        date: new Date().toLocaleString('es-ES')
+      }
+    };
+
+    const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.MAILSENDER_TOKEN}`
       },
-      body: JSON.stringify({
-        from: {
-          email: process.env.MAILFROM, 
-          name: origin
-        },
-        to: [{ email: destination, name: 'MailSender' }],
-        subject: `Nuevo mensaje de contacto de ${name}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9;">
-            <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-              <h2 style="color: #0B4059; border-bottom: 2px solid #4BC1F2; padding-bottom: 10px;">
-                🚀 Nuevo mensaje de contacto
-              </h2>
-              <div style="margin-top: 20px;">
-                <p><strong>👤 Nombre:</strong> ${name}</p>
-                <p><strong>📧 Email:</strong> ${email}</p>
-                <p><strong>💬 Mensaje:</strong></p>
-                <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin-top: 10px;">
-                  ${message.replace(/\n/g, '<br>')}
-                </div>
-              </div>
-              <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666;">
-                <p>📅 Enviado el: ${new Date().toLocaleString('es-ES')}</p>
-                <p>🌐 Desde tu sitio web</p>
-              </div>
-            </div>
-          </div>
-        `,
-        text: `
-Nuevo mensaje de contacto:
-Nombre: ${name}
-Email: ${email}
-Mensaje: ${message}
-
-Enviado el: ${new Date().toLocaleString('es-ES')}
-        `.trim()
-      })
+      body: JSON.stringify(emailJSPayload)
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      throw new Error(`Error de MailSender: ${response.status} - ${errorData}`);
+      throw new Error(`Error de EmailJS: ${response.status} - ${errorData}`);
     }
 
     return new Response(JSON.stringify({ message: 'Mensaje enviado exitosamente' }), {
