@@ -13,7 +13,7 @@ export async function POST(request) {
       });
     }
 
-    const { name, email, message } = await request.json();
+    const { name, email, message, destination, origin } = await request.json();
 
     if (!name || !email || !message) {
       return new Response(JSON.stringify({ message: 'Todos los campos son requeridos' }), {
@@ -34,9 +34,9 @@ export async function POST(request) {
       body: JSON.stringify({
         from: {
           email: process.env.MAILFROM, 
-          name: 'Pagina web JDM Consultoría'
+          name: origin
         },
-        to: [{ email: process.env.MAILSENDER_TO, name: 'MailSender' }],
+        to: [{ email: destination, name: 'MailSender' }],
         subject: `Nuevo mensaje de contacto de ${name}`,
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9;">

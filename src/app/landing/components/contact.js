@@ -4,7 +4,9 @@ export const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    message: ''
+    message: '',
+    destination: process.env.MAILSENDER_TO,
+    origin: 'Pagina web JDM Consultoría'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
