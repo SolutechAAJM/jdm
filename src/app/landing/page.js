@@ -15,7 +15,7 @@ import FloatingWhatsApp from "@/components/floatingWhatsapp";
 const Landing = () => {
   return (
     <>
-      <BackgroundAnimation />
+      {/* <BackgroundAnimation /> */}
       <FloatingWhatsApp />
       <motion.div
         className="App"
